@@ -6,8 +6,8 @@ COPY package.json ./
 
 RUN npm install
 
-# COPY serviceA.js ./
 COPY . .
+COPY .env.example ./.env
 
 EXPOSE 3001
 

@@ -6,10 +6,10 @@
   "scripts": {
     "build": "docker-compose build && docker image prune --force",
     "buildNoCache": "docker-compose build --no-cache",
-    "reBuildA": "docker-compose build service-a",
-    "reBuildB": "docker-compose build service-b",
+    "reBuildServiceA": "docker-compose build service-a",
+    "reBuildServiceB": "docker-compose build service-b",
     "reBuildServerApp": "docker-compose build server-app",
-    "reBuildRedis": "docker-compose build redis-service",
+    "reBuildRedisService": "docker-compose build redis-service",
     "up": "docker-compose up -d",
     "upWithForce": "docker-compose up -d --force-recreate",
     "down": "docker-compose down",

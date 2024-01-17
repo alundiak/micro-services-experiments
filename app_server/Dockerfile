@@ -6,10 +6,8 @@ COPY package.json ./
 
 RUN npm install
 
-COPY .env.example ./.env
-
-# COPY server.js ./
 COPY . .
+COPY .env.example ./.env
 
 EXPOSE 3000
 

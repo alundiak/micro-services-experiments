@@ -9,7 +9,7 @@ dotenv.config();
 
 // 'redis-service' (see docker-compose.yml) when other services on Docker 
 // 'localhost' when other services on MacOS
-const redisHost = process.env.REDIS_HOST || 'localhost';
+const redisHost = process.env.REDIS_SERVICE_HOST || 'localhost';
 
 const redis = new Redis({
   host: redisHost,

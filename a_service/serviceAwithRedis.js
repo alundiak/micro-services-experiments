@@ -1,17 +1,20 @@
+const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const Redis = require('ioredis');
 
+dotenv.config();
+
+const redis = new Redis({
+  host: process.env.REDIS_SERVICE_HOST || 'localhost',
+  port: 6379,
+});
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const redis = new Redis({
-  // host: 'localhost', // when other on MacOS
-  host: 'redis-service', // when other on Docker 
-  port: 6379,
-});
 
 app.post('/createAData', (req, res) => {
   const data = req.body;
