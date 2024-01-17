@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "docker-compose build",
-    "reBuildA": "docker-compose build serviceA",
-    "reBuildB": "docker-compose build serviceB",
-    "reBuildServerApp": "docker-compose build serverApp",
+    "buildWithForce": "docker-compose build --force-recreate",
+    "reBuildA": "docker-compose build serviceA --force-recreate",
+    "reBuildB": "docker-compose build serviceB --force-recreate",
+    "reBuildServerApp": "docker-compose build serverApp --force-recreate",
     "up": "docker-compose up -d",
     "down": "docker-compose down",
     "test": "echo \"Error: no test specified\" && exit 1"
