@@ -48,14 +48,15 @@ services:
     #   - REDIS_PORT=6379
     # LOCAL VOLUME
     # if no local folder `./my-local-redis-data/` Docker will create it and will use file `dump.rdb` as a store to persist an inside Redis state of data
-    volumes:
-      - ./my-local-redis-data:/data 
-    # LOCAL VOLUME
     # volumes:
-    #   - redis_data:/data
+    #   - ./my-local-redis-data:/data 
+    # LOCAL VOLUME
+    volumes:
+      - redis_data:/data
 
 # Works OK for local Docker, but on GitHub Actions:
 # "Volume redis_data declared as external, but could not be found. Please create the volume manually using `docker volume create --name=redis_data` and try again."
-# volumes:
-#   redis_data: # Using ANOTHER, external volume from another local project (I created recently)
-#     external: true      
+# So need either use creation on the fly (see above) or cretae via "docker volume create --name=redis_data" within Pipeline or GitHub Actions deployment flow.
+volumes:
+  redis_data: # Using ANOTHER, external volume from another local project (I created recently)
+    external: true      
