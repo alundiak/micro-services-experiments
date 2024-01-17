@@ -36,7 +36,7 @@ app.get('/getBData', async (req, res) => {
 
 const port = 3002;
 const server = app.listen(port, () => {
-  const { address, port } = server.address();
+  const { address } = server.address();
   const host = address === '::' ? 'localhost' : address;
   console.log(`ServiceB (with Redis) listening http://${host}:${port}`);
 });

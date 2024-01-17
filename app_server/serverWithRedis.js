@@ -24,10 +24,10 @@ app.use(express.static('public'));
 
 // TBD refactor for scale 100 services. Potentially Pub/Sub or Saga pattern.
 
-// const serviceAHost = 'http://localhost:3001';
-const serviceAHost = 'http://service-a:3001';
-// const serviceBHost = 'http://localhost:3002';
-const serviceBHost = 'http://service-b:3002';
+const serviceAHost = process.env.SERVICE_A_HOST || 'localhost';
+const serviceBHost = process.env.SERVICE_B_HOST || 'localhost';
+const serviceAUrl = `http://${serviceAHost}:3001`;
+const serviceBUrl = `http://${serviceBHost}:3002`;
 
 app.post('/postData', async (req, res) => {
   const data = req.body; // { message: "Hello" }
@@ -35,10 +35,10 @@ app.post('/postData', async (req, res) => {
   // TBD DIFF data 
 
   // Forward data to ServiceA
-  await axios.post(serviceAHost + '/createAData', data);
+  await axios.post(serviceAUrl + '/createAData', data);
 
   // Forward data to ServiceB
-  await axios.post(serviceBHost + '/createBData', data);
+  await axios.post(serviceBUrl + '/createBData', data);
 
   // res.send('Data forwarded successfully.'); // IF plain-text is OK
   res.json({ status: 'success', message: 'Data received and forwarded successfully' });
@@ -46,10 +46,10 @@ app.post('/postData', async (req, res) => {
 
 app.get('/getData', async (req, res) => {
   // Retrieve data from ServiceA
-  const dataA = await axios.get(serviceAHost + '/getAData');
+  const dataA = await axios.get(serviceAUrl + '/getAData');
 
   // Retrieve data from ServiceB
-  const dataB = await axios.get(serviceBHost + '/getBData');
+  const dataB = await axios.get(serviceBUrl + '/getBData');
 
   const combinedData = [...dataA.data, ...dataB.data];
 
@@ -68,7 +68,7 @@ app.post('/login', (req, res) => {
 
 const port = 3000;
 const server = app.listen(port, () => {
-  const { address, port } = server.address();
+  const { address } = server.address();
   const host = address === '::' ? 'localhost' : address;
   console.log(`Server App (with Redis) listening http://${host}:${port}`);
 });

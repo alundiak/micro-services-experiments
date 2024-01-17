@@ -37,7 +37,7 @@ app.get('/getAData', async (req, res) => {
 
 const port = 3001;
 const server = app.listen(port, () => {
-  const { address, port } = server.address();
+  const { address } = server.address();
   const host = address === '::' ? 'localhost' : address;
   console.log(`ServiceA (with Redis) listening http://${host}:${port}`);
 });
