@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  servicea:
+  serviceA: # this value will be used as Docker service name for `docker` commands
     build:
       context: ./a_service
       dockerfile: Dockerfile
@@ -10,7 +10,7 @@ services:
     ports:
       - "3001:3001"
 
-  serviceb:
+  serviceB:
     build:
       context: ./b_service
       dockerfile: Dockerfile
@@ -19,7 +19,7 @@ services:
     ports:
       - "3002:3002"
 
-  serverapp:
+  serverApp:
     build:
       context: ./app_server
       dockerfile: Dockerfile
@@ -28,5 +28,5 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - servicea
-      - serviceb
+      - serviceA
+      - serviceB

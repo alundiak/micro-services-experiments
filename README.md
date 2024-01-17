@@ -5,7 +5,24 @@ Intention of this repo is purely educational. I do experiment with different mic
 
 This code extracted from another repo [showcases](https://github.com/alundiak/showcases/tree/main/SOA) where I initially planned to extend a "SOA" information. But MicroServices as a topic becomes wider, and so caused a dedicated repo.
 
-## What is MicroServices info
+## SOA => Microservices
+
+> Microservices architecture is made up of very small and completely independent software components, called microservices, that specialize and focus on one task only. Microservices communicate through APIs, which are rules that developers create to let other software systems communicate with their microservice.
+
+
+> Microservices architecture is an evolution of the SOA architectural style. Microservices address the shortcomings of SOA to make the software more compatible with modern cloud-based enterprise environments. They are fine grained and favor data duplication as opposed to data sharing. This makes them completely independent with their own communication protocols that are exposed through lightweight APIs. It’s essentially the consumers' job to use the microservice through its API, thus removing the need for a centralized ESB.
+
+
+> AWS is a great place to build modern applications with modular architectural patterns, serverless operational models, and agile development processes. It offers the most complete platform for building highly available microservices to power modern applications of any scope and scale. For example, you can do the following:
+
+• Build, isolate, and run secure microservices in managed containers to simplify operations and reduce management overhead.
+• Use AWS Lambda to run your microservices without provisioning and managing servers.
+• Choose from 15 relational and non-relational purpose-built AWS databases to support microservices architecture.
+• Easily monitor and control microservices running on AWS with AWS App Mesh.
+• Monitor and troubleshoot complex microservice interactions with AWS X-Ray.
+
+
+## MicroServices info
 
 - https://blog.logrocket.com/building-microservices-node-js/
 - https://radixweb.com/blog/building-microservices-with-node-js#Reasons
@@ -58,27 +75,35 @@ In multiservices architectures:
 - `Durability` ensures that committed transactions remain committed even in case of system failure or power outage.
 
 
-## How to trigger micro-services activities
-
-- `curl -X POST -H "Content-Type: application/json" -d '{"service": "ServiceA", "message": "Hello from ServiceA"}' http://localhost:3001/data`
-- `curl -X POST -H "Content-Type: application/json" -d '{"service": "ServiceB", "message": "Hello from ServiceB"}' http://localhost:3002/data`
-
-## Run locally
+## Local: run NodeJS servers
 
 CLI/Terminal 1: `cd a_service && npm start` => http://localhost:3001/
 CLI/Terminal 2: `cd b_service && npm start` => http://localhost:3002/
 CLI/Terminal 3: `cd app_server && npm start` => http://localhost:3000/
 
 
-## Build Docker images and run containers
+## Local: how to trigger micro-services activities from CLI
 
-### Build images:
+- `curl -X POST -H "Content-Type: application/json" -d '{"service": "ServiceA", "message": "Hello from ServiceA"}' http://localhost:3001/data`
+- `curl -X POST -H "Content-Type: application/json" -d '{"service": "ServiceB", "message": "Hello from ServiceB"}' http://localhost:3002/data`
+
+
+## Docker: build images and run containers
+
+In root folder: 
+
+- `npm run up` or `docker-compose up -d`,
+- when needed `npm run down` or `docker-compose down`
+
+## Docker: Step by step
+
+Build images:
 
 - `docker build -t servicea:latest --file Dockerfile .`
 - `docker build -t serviceb:latest --file Dockerfile .`
 - `docker build -t serverapp:latest --file Dockerfile .`
 
-### Run containers 
+Run containers :
 
 **Without network, basic way, well enough**:
 
@@ -94,6 +119,9 @@ Available URLs: http://localhost:3000/ which refers to API services: http://loca
 - `docker run --name=serviceA -p 3001:3001 --network=my-microservices-network -d servicea:latest`
 - `docker run --name=serviceB -p 3002:3002 --network=my-microservices-network -d serviceb:latest`
 - `docker run --name=serverApp -p 3000:3000 --network=my-microservices-network -d serverapp:latest`
+
+
+## Docker: running via IP issue
 
 To check list of networks: `docker network ls`
 
@@ -112,8 +140,6 @@ But it's NOT possible to access via Browser on MacOS and it seems to be well kno
 https://github.com/docker/for-mac/issues/2670#issuecomment-372365274
 
 People suggest workaround related to some SOCKS settings, port 8888 and proxies.. I didn't try.
-
-
 
 
 ## Troubleshooting

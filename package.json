@@ -1,9 +1,13 @@
 {
   "name": "@lundiak/micro-services-experiments",
   "version": "1.0.0",
-  "description": "MicroServices Experiments ===",
+  "description": "MicroServices Experiments",
   "main": "index.js",
   "scripts": {
+    "build": "docker-compose build",
+    "reBuildA": "docker-compose build serviceA",
+    "reBuildB": "docker-compose build serviceB",
+    "reBuildServerApp": "docker-compose build serverApp",
     "up": "docker-compose up -d",
     "down": "docker-compose down",
     "test": "echo \"Error: no test specified\" && exit 1"
