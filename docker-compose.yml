@@ -1,32 +1,59 @@
 version: '3'
 
+# Service name as value will be used as Docker service name for `docker` commands
+# Values for service name can be mixed-case value but
+# Consider services names as hostname, as potential URL
+# and becauase of DNS resolution issue it should be in LOWER CASE ALWAYS, so that Chrome browser proeprly resolve host of Docker container.
+
 services:
-  serviceA: # this value will be used as Docker service name for `docker` commands
+  service-a: 
     build:
       context: ./a_service
       dockerfile: Dockerfile
-    image: service-a
-    container_name: ServiceA
+    image: service-a-img
+    container_name: ServiceAContainer
     ports:
       - "3001:3001"
 
-  serviceB:
+  service-b:
     build:
       context: ./b_service
       dockerfile: Dockerfile
-    image: service-b
-    container_name: ServiceB
+    image: service-b-img
+    container_name: ServiceBContainer
     ports:
       - "3002:3002"
 
-  serverApp:
+  server-app:
     build:
       context: ./app_server
       dockerfile: Dockerfile
-    image: server-app
-    container_name: ServerApp
+    image: server-app-img
+    container_name: ServerAppContainer
     ports:
       - "3000:3000"
     depends_on:
-      - serviceA
-      - serviceB
+      - service-a
+      - service-b
+  
+  redis-service:
+    image: "redis:latest"
+    container_name: RedisServiceContainer
+    ports:
+      - "6379:6379"
+    # environment:
+    #   - REDIS_HOST=redis-service
+    #   # - REDIS_HOST=localhost
+    #   # - REDIS_HOST=127.0.0.1
+    #   - REDIS_PORT=6379
+    # LOCAL VOLUME
+    # if no local folder `./my-local-redis-data/` Docker will create it and will use file `dump.rdb` as a store to persist an inside Redis state of data
+    # volumes:
+    #   - ./my-local-redis-data:/data 
+    # LOCAL VOLUME
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data: # Using ANOTHER, external volume from another local project (I created recently)
+    external: true      

@@ -7,7 +7,11 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const redis = new Redis();
+const redis = new Redis({
+  // host: 'localhost', // when other on MacOS
+  host: 'redis-service', // when other on Docker 
+  port: 6379,
+});
 
 app.post('/createBData', (req, res) => {
   const data = req.body;
@@ -28,6 +32,9 @@ app.get('/getBData', async (req, res) => {
   res.json(parsedData);
 });
 
-app.listen(3002, () => {
-  console.log('ServiceB (with Redis) listening on port 3002');
+const port = 3002;
+const server = app.listen(port, () => {
+  const { address, port } = server.address();
+  const host = address === '::' ? 'localhost' : address;
+  console.log(`ServiceB (with Redis) listening http://${host}:${port}`);
 });

@@ -132,3 +132,5 @@ dist
 .DS_Store
 .env
 
+# Redis Database storage (as result of Docker attaching/creating volume)
+*.rdb

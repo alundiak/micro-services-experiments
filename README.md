@@ -33,26 +33,27 @@ In root folder:
 
 Build images:
 
-- `docker build -t servicea:latest --file Dockerfile .`
-- `docker build -t serviceb:latest --file Dockerfile .`
-- `docker build -t serverapp:latest --file Dockerfile .`
+- `docker build -t service-a-img:latest --file Dockerfile .`
+- `docker build -t service-b-img:latest --file Dockerfile .`
+- `docker build -t server-app-img:latest --file Dockerfile .`
 
 Run containers :
 
 **Without network, basic way, well enough**:
 
-- `docker run --name=serviceA -p 3001:3001 -d servicea:latest`
-- `docker run --name=serviceB -p 3002:3002 -d serviceb:latest`
-- `docker run --name=serverApp -p 3000:3000 -d serverapp:latest`
+- `docker run --name=ServiceAContainer -p 3001:3001 -d service-a-img:latest`
+- `docker run --name=ServiceBContainer -p 3002:3002 -d service-b-img:latest`
+- `docker run --name=ServerAppContainer -p 3000:3000 -d server-app-img:latest`
 
 Available URLs: http://localhost:3000/ which refers to API services: http://localhost:3001/getAData and http://localhost:3002/getBData
 
 **If hostname IP-addresses needed (although doesn't work on MacOS)**:
 
 - `docker network create my-microservices-network`
-- `docker run --name=serviceA -p 3001:3001 --network=my-microservices-network -d servicea:latest`
-- `docker run --name=serviceB -p 3002:3002 --network=my-microservices-network -d serviceb:latest`
-- `docker run --name=serverApp -p 3000:3000 --network=my-microservices-network -d serverapp:latest`
+
+- `docker run --name=ServiceAContainer -p 3001:3001 --network=my-microservices-network -d service-a-img:latest`
+- `docker run --name=ServiceBContainer -p 3002:3002 --network=my-microservices-network -d service-b-img:latest`
+- `docker run --name=ServerAppContainer -p 3000:3000 --network=my-microservices-network -d server-app-img:latest`
 
 ## Docker: running via IP issue
 
@@ -61,9 +62,9 @@ To check list of networks: `docker network ls`
 To inspect the IP addresses assigned to containers using the following command:
 
 ```
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' serviceA
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' serviceB
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' serverApp
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ServiceAContainer
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ServiceBContainer
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ServerAppContainer
 ```
 
 In theory should be available URLs: http://172.17.0.8:3000/ which refers to API services: http://172.17.0.6:3001/ and http://172.17.0.7:3002/
@@ -79,9 +80,9 @@ People suggest workaround related to some SOCKS settings, port 8888 and proxies.
 
 Depends on what value is in `docker-compose.yml` file under `services` section then Services can be reached INSIDE OF DOCKER CONTAINER !!! using host names aka aliases of Docker services.
 
-- http://serviceA:3001/
-- http://serviceB:3002/
-- http://serverApp:3000/
+- http://service-a:3001/
+- http://service-b:3002/
+- http://server-app:3000/
 
 It works either for inside app `axios` calls or `curl` (if exists) or `wget` requests.
 
@@ -92,9 +93,10 @@ From main host environment (like I have MacOS) those host names ARE NOT REACHABL
 
 A - Create Python server to test connectivity
 
-- `docker exec -it serverApp python -m SimpleHTTPServer 3000`
+- `docker exec -it ServerAppContainer python -m SimpleHTTPServer 3000`
 - `curl http://172.17.0.4:3000`
 
+TBD. NodeJS image => container doesn't have `python` or `python2` or `python3`.
 
 B - Create Nginx server to test connectivity
 
@@ -103,13 +105,23 @@ B - Create Nginx server to test connectivity
 - `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' test-web-server`
 - `curl http://172.17.0.2:8080` - ALSO IS NOT REACHABLE ON MacOS
 
-- `docker exec -it serverApp ps aux | grep node`
+- `docker exec -it ServerAppContainer ps aux | grep node`
 > root         1  0.0  0.5 72x76 47x948 ?        Ssl  19:01   0:00 node server.js`
 
-- `$ docker inspect serverApp | grep "NetworkMode"`
+- `docker inspect ServerAppContainer | grep "NetworkMode"`
 > "NetworkMode": "my-microservices-network",
 
-- `docker image prune` purges dangling images, and looks like helps to avoid it in future.
+- `docker image prune` purges dangling images, and looks like helps to avoid it in future. USe `--force` to avoid confirmation. `-y` doesn't work.
+
+To investigate further, you can use the docker container stop command with the `--time` option to specify a timeout. 
+
+- `docker container stop --time=5 <container_name_or_id>`
+
+```
+docker container logs <container_name_or_id>
+docker events
+```
+
 
 ## TODO later
 

@@ -22,14 +22,19 @@
   </section>
 
   <script>
+    // const postDataUrl = 'http://server-app:3000/postData';  // BAD way for Docker setup
+    const postDataUrl = '/postData';
+
+    // const getDataUrl = 'http://server-app:3000/getData';
+    const getDataUrl = '/getData';
+
     function submitData() {
       const formData = new FormData(document.getElementById('dataForm'));
       const textData = formData.get('textData');
 
       const logs = document.getElementById('logs');
 
-      // fetch('http://serverApp:3000/postData', {
-      fetch('/postData', {
+      fetch(postDataUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,8 +52,7 @@
     }
 
     function getData() {
-      // fetch('http://serverApp:3000/getData')
-      fetch('/getData')
+      fetch(getDataUrl)
         .then(response => response.json())
         .then(data => {
           console.log('/getData success:', data);
