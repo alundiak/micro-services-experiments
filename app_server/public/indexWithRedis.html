@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microservices Communication</title>
+</head>
+
+<body>
+  <h1>Microservices Communication Demo</h1>
+  <form id="dataForm">
+    <label for="data">Data:</label>
+    <input type="text" id="textData" name="textData" required>
+    <button type="button" onclick="submitData()">Submit</button>
+    <div>Logs: <span id="logs"></span></div>
+  </form>
+
+  <section>
+    <button type="button" onclick="getData()">Get Combined Data</button>
+    <div id="response-data"></div>
+  </section>
+
+  <script>
+    function submitData() {
+      const formData = new FormData(document.getElementById('dataForm'));
+      const textData = formData.get('textData');
+
+      const logs = document.getElementById('logs');
+
+      // fetch('http://serverApp:3000/postData', {
+      fetch('/postData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: textData }),
+      })
+        .then(response => response.json())
+        .then(result => {
+          console.log('/postData Success:', result);
+          logs.innerHTML = `<span>${result.message}</span>`;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    function getData() {
+      // fetch('http://serverApp:3000/getData')
+      fetch('/getData')
+        .then(response => response.json())
+        .then(data => {
+          console.log('/getData success:', data);
+          displayResponse(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    function displayResponse(data) {
+      const responseDataDiv = document.getElementById('response-data');
+      responseDataDiv.innerHTML = `<p>Data: ${JSON.stringify(data)}</p>`;
+    }
+  </script>
+</body>
+
+</html>

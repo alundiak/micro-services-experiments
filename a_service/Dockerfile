@@ -11,4 +11,6 @@ COPY . .
 
 EXPOSE 3001
 
-CMD ["node", "serviceA.js"]
+# CMD ["node", "serviceA.js"]
+# CMD ["npm", "start"]
+CMD ["npm", "run", "startWithRedis"]

@@ -3,11 +3,11 @@ MicroServices Experiments
 
 Intention of this repo is purely educational. I do experiment with different micro-services setup. And I plan at least to use GitHub Actions for deployment.
 
-This code extracted from another repo [showcases](https://github.com/alundiak/showcases/tree/main/SOA) where I initially planned to extend a "SOA" information. But MicroServices as a topic becomes wider, and so caused a dedicated repo.
+This code extracted from another repo [showcases](https://github.com/alundiak/showcases/tree/main/SOA) where I initially planned to extend a "SOA" information. But MicroServices as a topic became wider, and it caused a dedicated repo.
 
 ## SOA => Microservices
 
-[SOA and MicrosServices info](./README_INFO.md)
+More info => [SOA and MicrosServices info](./README_INFO.md)
 
 ## Local: run NodeJS servers
 
@@ -54,7 +54,6 @@ Available URLs: http://localhost:3000/ which refers to API services: http://loca
 - `docker run --name=serviceB -p 3002:3002 --network=my-microservices-network -d serviceb:latest`
 - `docker run --name=serverApp -p 3000:3000 --network=my-microservices-network -d serverapp:latest`
 
-
 ## Docker: running via IP issue
 
 To check list of networks: `docker network ls`
@@ -74,6 +73,19 @@ But it's NOT possible to access via Browser on MacOS and it seems to be well kno
 https://github.com/docker/for-mac/issues/2670#issuecomment-372365274
 
 People suggest workaround related to some SOCKS settings, port 8888 and proxies.. I didn't try.
+
+
+## Docker: running by hostname aka service name
+
+Depends on what value is in `docker-compose.yml` file under `services` section then Services can be reached INSIDE OF DOCKER CONTAINER !!! using host names aka aliases of Docker services.
+
+- http://serviceA:3001/
+- http://serviceB:3002/
+- http://serverApp:3000/
+
+It works either for inside app `axios` calls or `curl` (if exists) or `wget` requests.
+
+From main host environment (like I have MacOS) those host names ARE NOT REACHABLE!
 
 
 ## Troubleshooting
@@ -97,6 +109,7 @@ B - Create Nginx server to test connectivity
 - `$ docker inspect serverApp | grep "NetworkMode"`
 > "NetworkMode": "my-microservices-network",
 
+- `docker image prune` purges dangling images, and looks like helps to avoid it in future.
 
 ## TODO later
 

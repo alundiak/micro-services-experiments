@@ -5,6 +5,7 @@
   "main": "serviceA.js",
   "scripts": {
     "start": "node serviceA.js",
+    "startWithRedis": "node serviceAwithRedis.js",
     "testPost": "curl -X POST -H \"Content-Type: application/json\" -d '{\"service\": \"ServiceA\", \"message\": \"Hello from ServiceA\"}' http://localhost:3001/createAData",
     "testGet": "curl http://localhost:3001/getAData"
   },

@@ -5,6 +5,7 @@
   "main": "serviceB.js",
   "scripts": {
     "start": "node serviceB.js",
+    "startWithRedis": "node serviceBwithRedis.js",
     "testPost": "curl -X POST -H \"Content-Type: application/json\" -d '{\"service\": \"ServiceB\", \"message\": \"Hello from ServiceB\"}' http://localhost:3002/createBData",
     "testGet": "curl http://localhost:3002/getBData"
   },
