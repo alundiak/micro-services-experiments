@@ -168,3 +168,14 @@ B - Create Nginx server to test connectivity
 
 - https://docs.docker.com/desktop/mac/permission-requirements/
 - https://docs.docker.com/build/building/multi-stage/
+
+
+## Redis - as EventBus aka Queue Management aka Messages Broker
+
+ChatGPT:
+
+- When ServerApp makes a request to ServiceA or ServiceB, include the necessary information in the request.
+- Alternatively, you can directly communicate with the Redis container from ServerApp and let ServiceA and ServiceB consume the messages.
+- Considerations:
+  - This approach decouples ServiceA, ServiceB, and ServerApp, allowing them to communicate asynchronously.
+  - If you want ServiceA and ServiceB to respond to requests from ServerApp, you might need a request-response pattern.
