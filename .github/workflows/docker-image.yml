@@ -1,0 +1,32 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: ls -la
+      - run: docker-compose up -d
+      # - run: |
+      #     cd ServiceA/
+      #     docker build -t servicea:$(date +%s) --file Dockerfile .
+      # - run: |
+      #     cd cd ServiceB/
+      #     docker build -t serviceb:$(date +%s) --file Dockerfile .
+      # - run: |
+      #     cd cd ServerApp/
+      #     docker build -t serverapp:$(date +%s) --file Dockerfile .
+      - run: |
+          docker images
+      - run: |
+          docker ps -a
+      - run: |
+          docker network ls

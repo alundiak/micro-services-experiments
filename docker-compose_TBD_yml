@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  serviceA:
+    build:
+      context: ./path/to/ServiceA
+    ports:
+      - "3001:3001"
+    depends_on:
+      - rabbitmq
+    environment:
+      - EVENT_BUS_URL=amqp://rabbitmq:5672
+
+  serviceB:
+    build:
+      context: ./path/to/ServiceB
+    ports:
+      - "3002:3002"
+    depends_on:
+      - rabbitmq
+    environment:
+      - EVENT_BUS_URL=amqp://rabbitmq:5672
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password

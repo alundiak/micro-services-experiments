@@ -1,0 +1,19 @@
+{
+  "name": "@lundiak/service-a",
+  "version": "1.0.0",
+  "description": "Service A (:3001) in my educational MicroServices code setup",
+  "main": "serviceA.js",
+  "scripts": {
+    "start": "node serviceA.js",
+    "testPost": "curl -X POST -H \"Content-Type: application/json\" -d '{\"service\": \"ServiceA\", \"message\": \"Hello from ServiceA\"}' http://localhost:3001/createAData",
+    "testGet": "curl http://localhost:3001/getAData"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}

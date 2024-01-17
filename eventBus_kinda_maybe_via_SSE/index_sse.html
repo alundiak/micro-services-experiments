@@ -1,0 +1,33 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microservices Communication</title>
+</head>
+
+<body>
+
+  <h1>Data Received from Microservices</h1>
+
+  <div id="dataContainer"></div>
+
+  <script>
+    const dataContainer = document.getElementById('dataContainer');
+
+    const eventSource = new EventSource('/events');
+
+    eventSource.onmessage = function (event) {
+      const eventData = JSON.parse(event.data);
+      const service = eventData.service;
+      const data = eventData.data;
+
+      dataContainer.innerHTML += `<p>Data from ${service}: ${JSON.stringify(data)}</p>`;
+    };
+  </script>
+
+</body>
+
+</html>

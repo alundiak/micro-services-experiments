@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  servicea:
+    build:
+      context: ./a_service
+      dockerfile: Dockerfile
+    image: service-a
+    container_name: ServiceA
+    ports:
+      - "3001:3001"
+
+  serviceb:
+    build:
+      context: ./b_service
+      dockerfile: Dockerfile
+    image: service-b
+    container_name: ServiceB
+    ports:
+      - "3002:3002"
+
+  serverapp:
+    build:
+      context: ./app_server
+      dockerfile: Dockerfile
+    image: server-app
+    container_name: ServerApp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - servicea
+      - serviceb

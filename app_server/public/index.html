@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client App</title>
+</head>
+
+<body>
+
+  <h1>Client App</h1>
+
+  <header>
+    <form id="loginForm" action="http://localhost:3000/login" method="post">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+      <br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      <br>
+      <button type="submit">Login</button>
+    </form>
+  </header>
+
+  <main>
+    <section>
+      <form id="dataForm">
+        <label for="dataA">Data for Service A:</label>
+        <input type="text" id="dataA" name="dataA" required>
+        <br>
+        <label for="dataB">Data for Service B:</label>
+        <input type="text" id="dataB" name="dataB" required>
+        <br>
+        <button type="button" onclick="submitData()">Submit Data</button>
+      </form>
+    </section>
+
+    <section>
+      <button type="button" onclick="getDataA()">Get Data from Service A</button>
+      <button type="button" onclick="getDataB()">Get Data from Service B</button>
+      <div id="response-data"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    responseDataDiv = document.getElementById('response-data');
+
+    function submitData() {
+      const dataA = document.getElementById('dataA').value;
+      const dataB = document.getElementById('dataB').value;
+
+      // Submit data to both services separately
+      postData('http://localhost:3001/createAData', { data: dataA });
+      postData('http://localhost:3002/createBData', { data: dataB });
+    }
+
+    function getData(endpoint) {
+      axios.get(endpoint)
+        .then(response => {
+          console.log('Fetched Data:', response.data);
+          displayResponse(response.data)
+        })
+        .catch(error => {
+          displayResponse({ message: error.message, url: error.config.url });
+          console.error('Error getting data:', error);
+        });
+    }
+
+    function postData(endpoint, data) {
+      axios.post(endpoint, data)
+        .then(response => {
+          console.log('Received-back created:', response.data);
+        })
+        .catch(error => {
+          console.error('Error creating data:', error);
+        });
+    }
+
+    function displayResponse(data) {
+      responseDataDiv.innerHTML = `<p>Data: ${JSON.stringify(data)}</p>`;
+    }
+
+    function getDataA() {
+      getData('http://localhost:3001/getAData');
+    }
+    function getDataB() {
+      getData('http://localhost:3002/getBData');
+    }
+  </script>
+
+</body>
+
+</html>
