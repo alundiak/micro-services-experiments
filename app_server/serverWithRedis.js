@@ -31,32 +31,45 @@ const serviceBUrl = `http://${serviceBHost}:3002`;
 
 app.post('/postData', async (req, res) => {
   const data = req.body; // { message: "Hello" }
-  console.log('Server (with Redis) received data:', data);
+  console.log('/postData Server App (with Redis) received data:', data);
   // TBD DIFF data 
 
-  // Forward data to ServiceA
-  await axios.post(serviceAUrl + '/createAData', data);
-
-  // Forward data to ServiceB
-  await axios.post(serviceBUrl + '/createBData', data);
+  if (data?.service === 'ServiceA') {
+    // Forward data to ServiceA
+    await axios.post(serviceAUrl + '/createAData', data);
+  } else if (data?.service === 'ServiceB') {
+    // Forward data to ServiceB
+    await axios.post(serviceBUrl + '/createBData', data);
+  }
 
   // res.send('Data forwarded successfully.'); // IF plain-text is OK
-  res.json({ status: 'success', message: 'Data received and forwarded successfully' });
+  res.json({ status: 'success', message: `Data received and forwarded to '${data?.service}' successfully` });
 });
 
 app.get('/getData', async (req, res) => {
+  console.log('/getData Server App (with Redis)');
+
   // Retrieve data from ServiceA
   const dataA = await axios.get(serviceAUrl + '/getAData');
+  console.log('dataA', dataA.data);
 
   // Retrieve data from ServiceB
   const dataB = await axios.get(serviceBUrl + '/getBData');
+  console.log('dataB', dataB.data);
 
-  const combinedData = [...dataA.data, ...dataB.data];
+  let combinedData = [];
+  if (dataA) {
+    combinedData.push(dataA.data);
+  }
+
+  if (dataB) {
+    combinedData.push(dataB.data);
+  }
 
   console.log('combinedData', combinedData);
 
   // Store combined data in Redis
-  redis.rpush('combinedDataList', JSON.stringify(combinedData));
+  // redis.rpush('combinedDataList', JSON.stringify(combinedData));
 
   res.json(combinedData);
 });

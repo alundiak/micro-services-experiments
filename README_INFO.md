@@ -1,6 +1,8 @@
 MicroServices info
 ===
 
+![img](./img.png)
+
 ChatGPT:
 
 > Microservices architecture is made up of very small and completely independent software components, called microservices, that specialize and focus on one task only. Microservices communicate through APIs, which are rules that developers create to let other software systems communicate with their microservice.

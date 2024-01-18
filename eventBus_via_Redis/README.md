@@ -34,7 +34,7 @@ ChatGPT:
 Note. More about CQRS here: https://github.com/alundiak/showcases/tree/main/CQRS
 
 - events (or messages) are used as a means of communication between components (Service A, Service B, and ServerApp).
-- Events are stored in a Redis list (dataList) and represent changes in the system's state. Each event contains a message.
+- Events are stored in a Redis list (`microservicesDataList`) and represent changes in the system's state. Each event contains a message.
 - Although not explicitly stated, there's a separation between the command side (which handles the creation of events) and the query side (which reads and processes events).
 - The client (ServerApp) sends a command (POST request with data) to the server. The server then generates an event and forwards it to both Service A and Service B.
 - Each service (Service A and Service B) is responsible for handling and processing the events on its own, performing the necessary actions based on the received events.

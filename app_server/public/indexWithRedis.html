@@ -4,22 +4,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Microservices Communication</title>
+  <title>Microservices Experiments</title>
+  <style>
+    .body-centered-if-needed {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      display: flex;
+    }
+
+    section {
+      flex: 1;
+      margin: 10px;
+      padding: 20px;
+      border: 1px solid #ddd;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Microservices Communication Demo</h1>
-  <form id="dataForm">
-    <label for="data">Data:</label>
-    <input type="text" id="textData" name="textData" required>
-    <button type="button" onclick="submitData()">Submit</button>
-    <div>Logs: <span id="logs"></span></div>
-  </form>
+  <h1>Microservices Experiments</h1>
 
-  <section>
-    <button type="button" onclick="getData()">Get Combined Data</button>
-    <div id="response-data"></div>
-  </section>
+  <div class="container">
+    <section>
+      <form id="dataForm">
+        <div>
+          <label for="textDataA">Data for Service A:</label>
+          <input type="text" id="textDataA" name="textDataA">
+          <button type="button" onclick="submitDataA()">Submit data A</button>
+        </div>
+
+        <p></p>
+
+        <div>
+          <label for="textDataB">Data for Service B:</label>
+          <input type="text" id="textDataB" name="textDataB">
+          <button type="button" onclick="submitDataB()">Submit data B</button>
+        </div>
+
+        <p></p>
+
+        <div>Logs: <span id="logs"></span></div>
+      </form>
+    </section>
+
+    <section>
+      <button type="button" onclick="getData()">Get Combined Data</button>
+      <div id="response-data"></div>
+    </section>
+  </div>
 
   <script>
     // const postDataUrl = 'http://server-app:3000/postData';  // BAD way for Docker setup
@@ -28,23 +66,34 @@
     // const getDataUrl = 'http://server-app:3000/getData';
     const getDataUrl = '/getData';
 
-    function submitData() {
+    function submitDataA() {
       const formData = new FormData(document.getElementById('dataForm'));
-      const textData = formData.get('textData');
+      const textDataA = formData.get('textDataA');
+      const data = { service: 'ServiceA', message: textDataA };
+      submitData(data);
+    }
 
-      const logs = document.getElementById('logs');
+    function submitDataB() {
+      const formData = new FormData(document.getElementById('dataForm'));
+      const textDataB = formData.get('textDataB');
+      const data = { service: 'ServiceB', message: textDataB };
+      submitData(data);
+    }
+
+    function submitData(dataObj) {
+      const logsDiv = document.getElementById('logs');
 
       fetch(postDataUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: textData }),
+        body: JSON.stringify(dataObj),
       })
         .then(response => response.json())
         .then(result => {
           console.log('/postData Success:', result);
-          logs.innerHTML = `<span>${result.message}</span>`;
+          logsDiv.innerHTML = `<span>${result.message}</span>`;
         })
         .catch(error => {
           console.error('Error:', error);
@@ -65,7 +114,7 @@
 
     function displayResponse(data) {
       const responseDataDiv = document.getElementById('response-data');
-      responseDataDiv.innerHTML = `<p>Data: ${JSON.stringify(data)}</p>`;
+      responseDataDiv.innerHTML = `<p>Data: <pre>${JSON.stringify(data, null, 4)}</pre></p>`;
     }
   </script>
 </body>
